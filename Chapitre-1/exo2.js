@@ -5,34 +5,39 @@ const app = express();
 var port = 8000;
 
 
-app.get('/:authors/', (req, res) => {
-    
-    var noms = req.params.authors
+app.get('/authors/:authorsId', (req, res) => {
 
-    switch(noms){
-        case 1 :
-            "Lawrence Nowell, UK"
+    var numb = req.params.authorsId;
+    // nameAndState = "";
+
+    switch (numb) {
+        case "1":
+            nameAndState = "Lawrence Nowell, UK";
             break;
 
-        case 2 :
-            "William Shakespeare, UK"
-            break;
-        
-        case 3 :
-            "Charles Dickens, US"
+        case "2":
+            nameAndState = "William Shakespeare, UK";
             break;
 
-        case 4 :
-            "Oscar Wilde, UK"
+        case "3":
+            nameAndState = "Charles Dickens, US";
+            break;
+
+        case "4":
+            nameAndState = "Oscar Wilde, UK";
+            break;
+
+        default:
+            nameAndState = "not found";
             break;
     }
 
     res.json({
-        message : noms
+        authors: nameAndState
 
-    })
+    });
 
-  });
+});
 
 
 
@@ -40,4 +45,5 @@ app.get('/:authors/', (req, res) => {
 
 app.listen(port, () => {
     console.log('Server started on port: ' + port);
-  });
+});
+
