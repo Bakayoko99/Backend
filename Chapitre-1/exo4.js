@@ -14,7 +14,7 @@ var authors = [
         nationality: "UK"
     },
     books:{
-        books: ["Beowulf"]
+        books: "Beowulf"
     }
 },
     
@@ -24,7 +24,7 @@ var authors = [
         nationality: "UK"
     },
     books:{
-        books: ["Hamlet, Othello, Romeo and Juliet, MacBeth"]
+        books: "Hamlet, Othello, Romeo and Juliet, MacBeth"
     }
 },
 
@@ -34,7 +34,7 @@ var authors = [
         nationality: "US"
     },
     books:{
-        books: ["Oliver Twist, A Christmas Carol"]
+        books: "Oliver Twist, A Christmas Carol"
     }
 },
 
@@ -44,7 +44,7 @@ var authors = [
         nationality: "UK"
     },
     books:{
-        books: ["The Picture of Dorian Gray, The Importance of Being Earnest"]
+        books: "The Picture of Dorian Gray, The Importance of Being Earnest"
     }
 }
 ]  
