@@ -8,29 +8,17 @@ app.use(cors())
 
 var port = 8001;
 
-var fiveCountries = [
-  
-  "name: france",
-
-  "name: italy",
-
-  "name: ivory coast",
-
-  "name: U.S.A",
-  
-  "name: japan"
-]
+var fiveCountries = 
 
 app.get('/countries/', (req, res) => {
 
   // console.log(Object.values());
+  var fiveCountries = ["name: france", "name: spain", "name: ivory coast", "name: U.S.A", "name: japan"];
 
-  res.send({
-    
-    
+  res.send(
     fiveCountries
     
-  })
+  )
 
 
 })
