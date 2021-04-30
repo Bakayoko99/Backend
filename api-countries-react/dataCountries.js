@@ -1,4 +1,4 @@
-const CountriesData = 
+const countriesData = 
 [
     {
         name: "France",
@@ -25,4 +25,4 @@ const CountriesData =
     }
 ]
 
-module.exports = {CountriesData}
+module.exports = {countriesData}

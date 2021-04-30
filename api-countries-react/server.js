@@ -1,7 +1,7 @@
 
 const express = require("express")
 const cors = require("cors")
-const {CountriesData} = require("./dataCountries")
+const {countriesData} = require("./dataCountries")
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.get("/country", (req, res) => {
     console.log("1 get fonctionne");
 
     res.json({
-        CountriesData
+        countriesData
     })
 })
 
@@ -25,15 +25,21 @@ app.get("/country/:pays", (req, res) => {
     const pays = req.params.pays
 
     // console.log("pays:", pays);
-    console.log(CountriesData.name);
-
-    // for(i = 0; i < CountriesData; i++){
-    //     if( pays === CountriesData.name)
-    // }
-
+    // console.log("country",country);
+    let country = {}
+    
+    for(i = 0; i < countriesData.length; i++){
+        // console.log("nameCountry", countriesData[i]);
+        let countryInfo = countriesData[i]
+        
+        if( pays === countriesData[i].name.toLowerCase()){
+            country = countryInfo
+        }
+    }
+    
     res.json({
 
-
+        country
         
     })
 })
