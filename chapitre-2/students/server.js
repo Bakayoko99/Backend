@@ -11,7 +11,8 @@ app.use(cors())
 var port = 8099;
 
 
-const studentsName = ["amir", "mugilan", "asma", "karim", "faruk"]
+const studentsName = []
+// const studentsName = ["amir", "mugilan", "asma", "karim", "faruk"]
 
 app.get('/students', (req, res) => {
     res.json(
@@ -26,7 +27,6 @@ app.post('/students',(req, res) => {
     studentsName.push(newName)
 
     console.log(newName);
-
     
 })
 
