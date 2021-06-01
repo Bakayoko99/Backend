@@ -17,6 +17,23 @@ const transformName = (req, res, next) => {
     next()
 }
 
+const heroesFound = (req, res, next) => {
+
+    const heroName = req.params.name
+    
+    console.log("heroName heroFound: ",heroName);
+
+    const findHero = superHeros.find(elem => elem.name.toLocaleLowerCase() === heroName)
+
+    console.log("findHero heroFound: ", findHero);
+
+    if(findHero === undefined){
+        res.json("hero not founded")
+    }
+
+    next()
+}
+
 app.use(express.json())
 
 app.use(cors())
@@ -141,9 +158,9 @@ app.post('/heroes/:name/powers', (req, res) => {
 
 })
 
-app.delete('/heroes/:name', (req, res) => {
+app.delete('/heroes/:name', heroesFound, (req, res) => {
 
-    const heroName = req.params.name
+    const heroName = req.params.name.toLocaleLowerCase()
 
     const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() === heroName)
 
@@ -153,13 +170,13 @@ app.delete('/heroes/:name', (req, res) => {
 
     console.log("heroIndex :", heroIndex);
 
-    res.json("hero deleted")
+    res.json(`${heroName} deleted`)
 })
 
-app.delete('/heroes/:name/powers', (req, res) => {
+app.delete('/heroes/:name/power/:power', heroesFound, (req, res) => {
 
     const heroName = req.params.name
-    const deletePower = req.body.power
+    const deletePower = req.params.power
 
     console.log("delete deletePower :", deletePower);
 
@@ -175,17 +192,34 @@ app.delete('/heroes/:name/powers', (req, res) => {
 
     console.log("delete heroFinded :", heroFinded.power);
 
-    res.json("power deleted")
+    res.json(`the power ${deletePower} of ${heroName} has been deleted`)
 })
 
-app.put('/heroes/:name/powers', (req, res) => {
+app.put('/heroes/:name', (req, res) => {
 
-    const heroName = req.params.name
-    const updatedPower = req.body
+    const heroName = req.params.name.toLocaleLowerCase()
+    const updatedHeroInfo = req.body
+    const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() == heroName)
 
-    
+    console.log("heroIndex put: ", heroIndex);
 
-    
+    superHeros[heroIndex]
+
+    if(superHeros[heroIndex]){
+
+    }
+
+    superHeros[heroIndex].name.replace(updatedHeroInfo.name) 
+    superHeros[heroIndex].power = updatedHeroInfo.power
+    superHeros[heroIndex].color = updatedHeroInfo.color
+    superHeros[heroIndex].isAlive = updatedHeroInfo.isAlive
+    superHeros[heroIndex].age = updatedHeroInfo.age
+
+    res.json("ok")
+
+
+
+
 })
 
 
