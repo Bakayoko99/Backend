@@ -1,6 +1,6 @@
 
 const express = require("express")
-const cors = require("cors")
+const cors = require("cors");
 
 const app = express()
 
@@ -23,7 +23,7 @@ app.use(cors())
 
 app.use(debug)
 
-const port = 8098;
+const port = 8095;
 
 const superHeros = [
     {
@@ -36,7 +36,7 @@ const superHeros = [
     },
     {
         name: "Thor",
-        power: ["electricty", "worthy"],
+        power: ["electricity", "worthy"],
         color: "blue",
         isAlive: true,
         age: 300,
@@ -105,14 +105,19 @@ app.post('/heroes', transformName, (req, res) => {
 
     const addNewHero = superHeros.filter(elem => elem.name.toLocaleLowerCase() == req.body.name)
 
-    if(addNewHero.length == 0 ){
-        return superHeros.push(newHero) 
-    }else(res.json('hero deja present'))
+    if (addNewHero.length == 0) {
+
+        superHeros.push(newHero)
+
+        res.json("ok, heros ajoute")
+
+    } else {
+        res.json('hero deja present')
+    }
 
     console.log('post heroes new hero: ', newHero);
     console.log('post addheroes: ', addNewHero);
 
-    res.json("ok, heros ajoute")
 
 })
 
@@ -134,6 +139,53 @@ app.post('/heroes/:name/powers', (req, res) => {
 
     res.json("Pouvoir ajoute !")
 
+})
+
+app.delete('/heroes/:name', (req, res) => {
+
+    const heroName = req.params.name
+
+    const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() === heroName)
+
+    if (heroIndex >= 0) {
+        superHeros.splice(heroIndex, 1)
+    }
+
+    console.log("heroIndex :", heroIndex);
+
+    res.json("hero deleted")
+})
+
+app.delete('/heroes/:name/powers', (req, res) => {
+
+    const heroName = req.params.name
+    const deletePower = req.body.power
+
+    console.log("delete deletePower :", deletePower);
+
+    const heroFinded = superHeros.find(elem => elem.name.toLocaleLowerCase() === heroName)
+
+    const powerIndex = heroFinded.power.findIndex(elem => elem == deletePower)
+
+    for (i = 0; i < superHeros.length; i++) {
+        superHeros[i] === heroFinded ? superHeros[i].power.splice(powerIndex, 1) : null
+    }
+
+    console.log("delete powerIndex :", powerIndex);
+
+    console.log("delete heroFinded :", heroFinded.power);
+
+    res.json("power deleted")
+})
+
+app.put('/heroes/:name/powers', (req, res) => {
+
+    const heroName = req.params.name
+    const updatedPower = req.body
+
+    
+
+    
 })
 
 

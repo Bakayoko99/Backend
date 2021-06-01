@@ -8,7 +8,7 @@ app.use(express.json())
 
 app.use(cors())
 
-var port = 8099;
+var port = 8098;
 
 
 const studentsName = []
@@ -26,6 +26,7 @@ app.post('/students',(req, res) => {
 
     studentsName.push(newName)
 
+    res.json('ok');
     console.log(newName);
     
 })
