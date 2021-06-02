@@ -203,17 +203,13 @@ app.put('/heroes/:name', (req, res) => {
 
     console.log("heroIndex put: ", heroIndex);
 
-    superHeros[heroIndex]
+    superHeros.splice(heroIndex, 1, updatedHeroInfo)
 
-    if(superHeros[heroIndex]){
-
-    }
-
-    superHeros[heroIndex].name.replace(updatedHeroInfo.name) 
-    superHeros[heroIndex].power = updatedHeroInfo.power
-    superHeros[heroIndex].color = updatedHeroInfo.color
-    superHeros[heroIndex].isAlive = updatedHeroInfo.isAlive
-    superHeros[heroIndex].age = updatedHeroInfo.age
+    // superHeros[heroIndex].name.replace(updatedHeroInfo.name) 
+    // superHeros[heroIndex].power.splice(updatedHeroInfo.power) 
+    // superHeros[heroIndex].color.replace(updatedHeroInfo.color) 
+    // superHeros[heroIndex].isAlive = updatedHeroInfo.isAlive
+    // superHeros[heroIndex].age.toString().replace(updatedHeroInfo.age)
 
     res.json("ok")
 
