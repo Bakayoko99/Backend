@@ -1,7 +1,6 @@
 {
-  "name": "Backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +12,17 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jquery": "^3.6.0",
+    "mongoose": "^5.12.13",
     "request": "^2.88.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bakayoko99/Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bakayoko99/Backend/issues"
+  },
+  "homepage": "https://github.com/Bakayoko99/Backend#readme",
+  "description": ""
 }
