@@ -43,99 +43,127 @@ app.use(debug)
 
 const port = 8095;
 
-
-const superHeros = [
-    {
-        name: "Iron Man",
-        power: ["money"],
-        color: "red",
-        isAlive: true,
-        age: 46,
-        image: "https://blog.fr.playstation.com/tachyon/sites/10/2019/07/unnamed-file-18.jpg?resize=1088,500&crop_strategy=smart"
-    },
-    {
-        name: "Thor",
-        power: ["electricity", "worthy"],
-        color: "blue",
-        isAlive: true,
-        age: 300,
-        image: "https://www.bdfugue.com/media/catalog/product/cache/1/image/400x/17f82f742ffe127f42dca9de82fb58b1/9/7/9782809465761_1_75.jpg"
-    },
-    {
-        name: "Daredevil",
-        power: ["blind"],
-        color: "red",
-        isAlive: false,
-        age: 30,
-        image: "https://aws.vdkimg.com/film/2/5/1/1/251170_backdrop_scale_1280xauto.jpg"
+mongoose.connect("mongodb://localhost:27017/superHeros", (err) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("i'm connected to the database");
     }
-]
+})
 
+const heroSchema = mongoose.Schema({
+    name: String,
+    power: Array,
+    color: String,
+    isAlive: Boolean,
+    age: Number,
+    image: String
+})
+
+const Heroes = mongoose.model("Heroes", heroSchema)
+
+const insertHeroes = async () => {
+    const insertDefaultHeroes = await Heroes.insertMany([
+        {
+            name: "iron man",
+            power: ["money"],
+            color: "red",
+            isAlive: true,
+            age: 46,
+            image: "https://blog.fr.playstation.com/tachyon/sites/10/2019/07/unnamed-file-18.jpg?resize=1088,500&crop_strategy=smart"
+        },
+        {
+            name: "thor",
+            power: ["electricity", "worthy"],
+            color: "blue",
+            isAlive: true,
+            age: 300,
+            image: "https://www.bdfugue.com/media/catalog/product/cache/1/image/400x/17f82f742ffe127f42dca9de82fb58b1/9/7/9782809465761_1_75.jpg"
+        },
+        {
+            name: "daredevil",
+            power: ["blind"],
+            color: "red",
+            isAlive: false,
+            age: 30,
+            image: "https://aws.vdkimg.com/film/2/5/1/1/251170_backdrop_scale_1280xauto.jpg"
+        }
+    ])
+}
+insertHeroes()
 
 app.get('/heroes', async (req, res) => {
     
-    res.json( superHeros )
+    const allHeroes = await Heroes.find({}).exec()
+
+    res.json( allHeroes )
 })
 
 app.get('/heroes/:name', async (req, res) => {
 
     const heroName = req.params.name
 
-    let heroinfo = {}
+    const findOneHero = await Heroes.findOne({name:heroName})
+    
+    console.log("finOne hero get: ", findOneHero  );
 
-    for (i = 0; i < superHeros.length; i++) {
-        let hero = superHeros[i]
 
-        if (superHeros[i].name.toLocaleLowerCase() === heroName) {
-            heroinfo = hero
-        }
+    if (findOneHero == null){
+        res.json("hero not found")
+    }else{
+        res.json(findOneHero)
     }
-
-    res.json(heroinfo)
 
 })
 
-app.get('/heroes/:name/powers', (req, res) => {
+app.get('/heroes/:name/powers', async (req, res) => {
 
     const heroName = req.params.name
 
-    let hero = []
+    const findOneHero = await Heroes.findOne({name:heroName})
 
-    for (i = 0; i < superHeros.length; i++) {
-
-        let heroPowers = superHeros[i].power
-
-        if (superHeros[i].name.toLocaleLowerCase() === heroName) {
-
-            hero = heroPowers
-
-        }
+    if (findOneHero == null){
+        res.json("hero not found")
+    }else{
+        res.json(findOneHero.power)
     }
-
-    res.json(hero)
 
 })
 
-app.post('/heroes', transformName, (req, res) => {
+app.post('/heroes', async (req, res) => {
 
     const newHero = req.body
+    const oneHero = req.body.name
 
     // const addNewHero = superHeros.push(newHero)
 
-    const addNewHero = superHeros.filter(elem => elem.name.toLocaleLowerCase() == req.body.name)
+    const findHero = await Heroes.findOne({oneHero})
 
-    if (addNewHero.length == 0) {
-
-        superHeros.push(newHero)
-
-        res.json("ok, heros ajoute")
-
-    } else {
-        res.json('hero deja present')
+    if (findHero == null){
+        
+        const insertHeroes = new Heroes(newHero) 
+        await insertHeroes.save()
+        res.json("hero ajoute")
+        
+    }else{
+        res.json("hero deja present")
     }
 
-    console.log('post heroes new hero: ', newHero);
-    console.log('post addheroes: ', addNewHero);
+
+    // const addNewHero = superHeros.filter(elem => elem.name.toLocaleLowerCase() == req.body.name)
+
+    // if (addNewHero.length == 0) {
+
+    //     superHeros.push(newHero)
+
+    //     res.json("ok, heros ajoute")
+
+    // } else {
+    //     res.json('hero deja present')
+    // }
+
+    // console.log('post heroes new hero: ', newHero);
+    // console.log('post addheroes: ', addNewHero);
 
 
 })
