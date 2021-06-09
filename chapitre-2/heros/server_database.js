@@ -18,17 +18,17 @@ const transformName = (req, res, next) => {
     next()
 }
 
-const heroesFound = (req, res, next) => {
+const heroesFound = async (req, res, next) => {
 
     const heroName = req.params.name
 
     console.log("heroName heroFound: ", heroName);
 
-    const findHero = superHeros.find(elem => elem.name.toLocaleLowerCase() === heroName)
+    const findHero = await Heroes.find({name:heroName})
 
     console.log("findHero heroFound: ", findHero);
 
-    if (findHero === undefined) {
+    if (findHero[0] === undefined) {
         res.json("hero not founded")
     }
 
@@ -90,27 +90,27 @@ const insertHeroes = async () => {
         }
     ])
 }
-insertHeroes()
+// insertHeroes()
 
 app.get('/heroes', async (req, res) => {
-    
+
     const allHeroes = await Heroes.find({}).exec()
 
-    res.json( allHeroes )
+    res.json(allHeroes)
 })
 
 app.get('/heroes/:name', async (req, res) => {
 
     const heroName = req.params.name
 
-    const findOneHero = await Heroes.findOne({name:heroName})
-    
-    console.log("finOne hero get: ", findOneHero  );
+    const findOneHero = await Heroes.findOne({ name: heroName })
+
+    console.log("finOne hero get: ", findOneHero);
 
 
-    if (findOneHero == null){
+    if (findOneHero == null) {
         res.json("hero not found")
-    }else{
+    } else {
         res.json(findOneHero)
     }
 
@@ -120,11 +120,11 @@ app.get('/heroes/:name/powers', async (req, res) => {
 
     const heroName = req.params.name
 
-    const findOneHero = await Heroes.findOne({name:heroName})
+    const findOneHero = await Heroes.findOne({ name: heroName })
 
-    if (findOneHero == null){
+    if (findOneHero == null) {
         res.json("hero not found")
-    }else{
+    } else {
         res.json(findOneHero.power)
     }
 
@@ -133,72 +133,65 @@ app.get('/heroes/:name/powers', async (req, res) => {
 app.post('/heroes', async (req, res) => {
 
     const newHero = req.body
-    const oneHero = req.body.name
 
-    // const addNewHero = superHeros.push(newHero)
+    const findHero = await Heroes.findOne(newHero)
 
-    const findHero = await Heroes.findOne({oneHero})
+    console.log("findHero post: ", findHero);
 
-    if (findHero == null){
-        
-        const insertHeroes = new Heroes(newHero) 
+    if (findHero == null) {
+
+        const insertHeroes = new Heroes(newHero)
         await insertHeroes.save()
         res.json("hero ajoute")
-        
-    }else{
+
+    } else {
         res.json("hero deja present")
     }
 
-
-    // const addNewHero = superHeros.filter(elem => elem.name.toLocaleLowerCase() == req.body.name)
-
-    // if (addNewHero.length == 0) {
-
-    //     superHeros.push(newHero)
-
-    //     res.json("ok, heros ajoute")
-
-    // } else {
-    //     res.json('hero deja present')
-    // }
-
-    // console.log('post heroes new hero: ', newHero);
-    // console.log('post addheroes: ', addNewHero);
-
-
 })
 
-app.post('/heroes/:name/powers', (req, res) => {
+app.post('/heroes/:name/powers', async (req, res) => {
 
     const newPowers = req.body.power
 
     const powerHero = req.params.name
 
-    const addPowers = superHeros.filter(elem => {
-        if (elem.name.toLocaleLowerCase() == powerHero) {
-            return elem.power.push(newPowers)
-        }
-    })
+    const findPower = async () => {
 
-    console.log("post new powers: ", newPowers);
-    console.log("post pouvoir hero: ", powerHero);
-    console.log("post power added: ", addPowers);
+        const keyPowerfinded = await Heroes.find({ name: powerHero }, "power -_id")
 
-    res.json("Pouvoir ajoute !")
+        return keyPowerfinded[0].power.find(elem => elem == newPowers)
+
+    }
+
+    const powerFinded = await findPower()
+
+    if (powerFinded == undefined) {
+        const findHero = await Heroes.findOneAndUpdate({ name: powerHero }, { $push: { power: newPowers } })
+        res.json("Pouvoir ajoute !")
+    } else {
+        res.json("pouvoir existant")
+    }
+
+    console.log("findPower :", powerFinded);
+
+    // console.log("post new powers: ", newPowers);
+    // console.log("post pouvoir hero: ", powerHero);
+    // console.log("post power added: ", addPowers);
 
 })
 
-app.delete('/heroes/:name', heroesFound, (req, res) => {
+app.delete('/heroes/:name', heroesFound, async (req, res) => {
 
-    const heroName = req.params.name.toLocaleLowerCase()
+    const heroName = req.params.name
 
-    const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() === heroName)
+    // const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() === heroName)
 
-    if (heroIndex >= 0) {
-        superHeros.splice(heroIndex, 1)
-    }
+    const findHero = Heroes.find({ name: heroName })
+    await findHero.remove()
 
-    console.log("heroIndex :", heroIndex);
+
+    console.log("findHero :", await findHero);
 
     res.json(`${heroName} deleted`)
 })
