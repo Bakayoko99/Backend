@@ -24,7 +24,7 @@ const heroesFound = async (req, res, next) => {
 
     console.log("heroName heroFound: ", heroName);
 
-    const findHero = await Heroes.find({name:heroName})
+    const findHero = await Heroes.find({ name: heroName })
 
     console.log("findHero heroFound: ", findHero);
 
@@ -196,48 +196,45 @@ app.delete('/heroes/:name', heroesFound, async (req, res) => {
     res.json(`${heroName} deleted`)
 })
 
-app.delete('/heroes/:name/power/:power', heroesFound, (req, res) => {
+app.delete('/heroes/:name/power/:power', heroesFound, async (req, res) => {
 
     const heroName = req.params.name
     const deletePower = req.params.power
 
     console.log("delete deletePower :", deletePower);
 
-    const heroFinded = superHeros.find(elem => elem.name.toLocaleLowerCase() === heroName)
+    const findPower = async () => {
 
-    const powerIndex = heroFinded.power.findIndex(elem => elem == deletePower)
+        const keyPowerfinded = await Heroes.find({ name: heroName }, "power -_id")
 
-    for (i = 0; i < superHeros.length; i++) {
-        superHeros[i] === heroFinded ? superHeros[i].power.splice(powerIndex, 1) : null
+        return keyPowerfinded[0].power.find(elem => elem == deletePower)
+
     }
 
-    console.log("delete powerIndex :", powerIndex);
+    const powerFinded = await findPower()
 
-    console.log("delete heroFinded :", heroFinded.power);
+    if (powerFinded == undefined) {
+        res.json("power not finded")
+    } else {
+        await Heroes.updateOne({ name: heroName }, { $pull: { power: deletePower } })
+        res.json(`the power ${deletePower} of ${heroName} has been deleted`)
+    }
 
-    res.json(`the power ${deletePower} of ${heroName} has been deleted`)
+    console.log("powerFinded :", powerFinded);
+
 })
 
-app.put('/heroes/:name', (req, res) => {
+app.put('/heroes/:name', async (req, res) => {
 
-    const heroName = req.params.name.toLocaleLowerCase()
+    const heroName = req.params.name
     const updatedHeroInfo = req.body
-    const heroIndex = superHeros.findIndex(elem => elem.name.toLocaleLowerCase() == heroName)
+    
+    console.log("updatedHeroInfo :", updatedHeroInfo);
 
-    console.log("heroIndex put: ", heroIndex);
+    await Heroes.findOneAndReplace( {name: heroName} , updatedHeroInfo)
 
-    superHeros.splice(heroIndex, 1, updatedHeroInfo)
-
-    // superHeros[heroIndex].name.replace(updatedHeroInfo.name) 
-    // superHeros[heroIndex].power.splice(updatedHeroInfo.power) 
-    // superHeros[heroIndex].color.replace(updatedHeroInfo.color) 
-    // superHeros[heroIndex].isAlive = updatedHeroInfo.isAlive
-    // superHeros[heroIndex].age.toString().replace(updatedHeroInfo.age)
 
     res.json("ok")
-
-
-
 
 })
 
