@@ -1,7 +1,6 @@
 
 const mongoose = require("mongoose");
-const Hotel = require("./model-hotel")
-const Resto = require("./model-resto")
+const {Hotel, Resto} = require('./models-trippy')
 
 mongoose.connect("mongodb://localhost:27017/trippy_basics", (err) => {
     if (err) {
