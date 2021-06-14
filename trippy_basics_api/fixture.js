@@ -34,8 +34,7 @@ const addRestos = async () => {
             city: "city resto test",
             country: "country resto test",
             stars: 3,
-            hasSpa: true,
-            hasPool: false,
+            cuisine: "cuisine test",
             priceCategory: 3
         }
     ])

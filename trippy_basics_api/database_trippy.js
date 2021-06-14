@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const {Hotel, Resto} = require('./models-trippy')
+const { Hotel, Resto } = require('./models-trippy')
 
 const app = express()
 
@@ -97,19 +97,25 @@ app.put('/hotels/:id', async (req, res) => {
 
         const idFinded = await Hotel.findById(id)
         //   const idFinded = await Hotel.exists(checkId)
-        const updateHotel = await Hotel.updateOne({ _id: id }, { name: query })
+        if(idFinded == null){
+            res.json('id not correct')
+        }else{
+
+            await Hotel.updateOne({ _id: id }, { name: query })
+            res.json("Hotel name updated")
+        }
+
 
         console.log("id app.put :", id);
         console.log("query app.put :", query);
         console.log("idFinded app.put :", idFinded);
 
-        res.json("ok")
 
     } catch (err) {
 
         res.json("error 500")
 
-        // console.error(err);
+        console.error(err);
 
     }
 
@@ -121,19 +127,151 @@ app.delete('/hotels/:id', async (req, res) => {
     try {
         const id = req.params.id
 
-        await Hotel.deleteOne({ _id: id })
+        const idFinded = await Hotel.findById(id)
 
-        res.json("hotel deleted")
+        if(idFinded == null){
+            res.json("Hotel not founded")
+        }else{
+
+            await Hotel.deleteOne({ _id: id })
+            res.json("hotel deleted")
+        }
+
+
 
     } catch (err) {
 
         res.json("error 500")
 
-        // console.error(err);
+        console.error(err);
     }
 
 })
 
+app.get('/restaurant', async (req, res) => {
+
+    try {
+
+        const allRestos = await Resto.find({})
+
+        res.json(allRestos)
+
+    } catch (err) {
+
+        res.json("error 500")
+        console.error(err);
+    }
+})
+
+app.get('/restaurant/:id', async (req, res) => {
+
+    try {
+        const id = req.params.id
+
+        const restoId = await Resto.findById(id)
+
+        res.json(restoId)
+
+
+    } catch (err) {
+
+        res.json("error 500")
+        console.error(err);
+    }
+})
+
+app.post('/restaurant', async (req, res) => {
+
+    try {
+        const addRestos = req.body
+
+        const restoName = req.body.name
+
+        const findResto = await Resto.find({ name: restoName })
+
+        console.log("findResto post :", findResto[0]);
+        console.log("addRestos post :", addRestos);
+        console.log("restoName post :", restoName);
+        // res.json(`restaurant ${restoName} added`)
+
+        if (findResto[0] == null) {
+            await Resto.insertMany(addRestos)
+            console.log(findResto);
+            res.json(`restaurant ${restoName} added`)
+        } else {
+            res.json(`restaurant ${restoName} deja present`)
+        }
+
+    } catch (err) {
+
+        res.json("error 500")
+
+        console.error(err);
+
+    }
+
+
+})
+
+app.put('/restaurant/:id', async (req, res) => {
+
+    try {
+        const id = req.params.id
+        const query = req.query.name
+
+
+        const idFinded = await Resto.findById(id)
+        //   const idFinded = await Resto.exists(checkId)
+        if (idFinded == null) {
+            res.json('id not correct')
+        } else {
+
+            await Resto.updateOne({ _id: id }, { name: query })
+        }
+
+        console.log("id app.put :", id);
+        console.log("query app.put :", query);
+        console.log("idFinded app.put :", idFinded);
+
+        res.json("Restaurant name updated")
+
+    } catch (err) {
+
+        res.json("error 500")
+
+        console.error(err);
+
+    }
+
+
+})
+
+app.delete('/restaurant/:id', async (req, res) => {
+
+    try {
+        const id = req.params.id
+
+        const idFinded = await Resto.findById(id)
+
+        console.log("idFinded delete resto :", idFinded);
+        
+        if(idFinded == null){
+            res.json("Restaurant not founded")
+        }else{
+
+            await Resto.deleteOne({ _id: id })
+            res.json("Restaurant deleted")
+        }
+
+
+    } catch (err) {
+
+        res.json("error 500")
+
+        console.error(err);
+    }
+
+})
 
 
 
