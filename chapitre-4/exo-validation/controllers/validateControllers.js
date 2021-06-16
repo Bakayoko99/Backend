@@ -1,6 +1,8 @@
 const expressValidator = require('express-validator')
 const passwordValidator = require('password-validator');
 const { validationResult } = require('express-validator');
+const usersModel = require("../model/usersModel")
+
 
 const validateController = () => {
     expressValidator.body('username').isLength({ min: 4 }),
@@ -25,4 +27,8 @@ const validateController = () => {
     }
 }
 
-module.exports = validateController
+const userCheck = () => {
+    if( usersModel )
+}
+
+module.exports = {validateController}
