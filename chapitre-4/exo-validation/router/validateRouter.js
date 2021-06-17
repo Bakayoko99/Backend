@@ -4,11 +4,12 @@ const router = express.Router();
 
 
 const {userCheck, addUser } = require('../controllers/validateControllers');
+const { validationUsers } = require('../middleweares/validationMiddelware');
 
 
 router.get('/', userCheck)
 
-router.post('/add', addUser);
+router.post('/add', validationUsers, addUser);
 
 router.all("*", (req, res) => {
     res.status(404).json({
