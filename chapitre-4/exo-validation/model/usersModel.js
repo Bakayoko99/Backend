@@ -7,6 +7,6 @@ const userSchema = new mongoose.Schema({
     ville: String
 })
 
-const userModel = mongoose.Schema("user", userSchema )
+const userModel = mongoose.model("User", userSchema )
 
-module.exports = {userModel}
+module.exports = userModel
