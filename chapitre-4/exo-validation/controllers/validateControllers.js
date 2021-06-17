@@ -11,18 +11,17 @@ const addUser = async (req, res) => {
 
     const user = req.body
 
+    console.log("user :", user);
+
     if (errors.isEmpty() === false) {
         res.status(400).json({ errors: "error 400" })
     } else {
-        await userModel.insertMany([{ user }])
+        await userModel.create(user)
         res.json("user added")
     }
 
-    res.json("okk")
+    // res.json("okk")
 }
-// res.json("validateController ok")
-
-// validateController()
 
 const userCheck = async (req, res) => {
     try {
@@ -40,7 +39,33 @@ const userCheck = async (req, res) => {
 
 }
 
-module.exports = { addUser, userCheck }
+const oneUserFromName = async (req, res) => {
+
+    const userName = req.params.username
+
+    const usernameFinded = await userModel.findOne({ username: userName })
+
+    console.log("userName :", userName);
+
+    if(usernameFinded === null){
+        res.json(`username ${userName} not found`)
+    }else{
+        
+        res.json(usernameFinded)
+    }
+
+}
+
+const oneUserFromId = async (req, res) => {
+
+    const userId = req.params
+
+    console.log("userId :", userId);
+
+    res.json("oneUserFromId check")
+}
+
+module.exports = { addUser, userCheck, oneUserFromName, oneUserFromId }
 
 
 // {
