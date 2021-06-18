@@ -1,5 +1,6 @@
 
 const { validationResult } = require('express-validator');
+const { error } = require('jquery');
 const userModel = require("../model/usersModel");
 
 
@@ -47,10 +48,10 @@ const oneUserFromName = async (req, res) => {
 
     console.log("userName :", userName);
 
-    if(usernameFinded === null){
+    if (usernameFinded === null) {
         res.json(`username ${userName} not found`)
-    }else{
-        
+    } else {
+
         res.json(usernameFinded)
     }
 
@@ -58,15 +59,24 @@ const oneUserFromName = async (req, res) => {
 
 const oneUserFromId = async (req, res) => {
 
-    const userId = req.params.id
+    try {
 
-    const idFinded = await userModel.findById(userId)
+        const userId = req.params.id
 
-    console.log("idFinded :", idFinded);
+        const idFinded = await userModel.findById(userId)
 
-    console.log("userId :", userId);
+        console.log("idFinded :", idFinded === error);
 
-    res.json("oneUserFromId check")
+        console.log("userId :", userId );
+
+        res.json(idFinded)
+
+    } catch (error) {
+        
+        res.json("id not foud")
+
+    }
+
 }
 
 module.exports = { addUser, userCheck, oneUserFromName, oneUserFromId }
