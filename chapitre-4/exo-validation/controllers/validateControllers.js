@@ -65,7 +65,7 @@ const oneUserFromId = async (req, res) => {
 
         const idFinded = await userModel.findById(userId)
 
-        console.log("idFinded :", idFinded === error);
+        console.log("idFinded :", idFinded);
 
         console.log("userId :", userId );
 
@@ -73,13 +73,34 @@ const oneUserFromId = async (req, res) => {
 
     } catch (error) {
         
-        res.json("id not foud")
+        res.status(404).json("id not foud")
 
     }
 
 }
 
-module.exports = { addUser, userCheck, oneUserFromName, oneUserFromId }
+const oneUserFromEmail = async (req, res) => {
+
+    try {
+        
+        const userEmail = req.params.email
+
+        const emailFinded = await userModel.findOne({email: userEmail})
+
+        if(emailFinded === null){
+            res.json('Email not available')
+        }
+        
+        res.json(emailFinded)
+
+    } catch (error) {
+        
+        res.status(404).json("Email not found")
+
+    }
+}
+
+module.exports = { addUser, userCheck, oneUserFromName, oneUserFromId, oneUserFromEmail }
 
 
 // {
