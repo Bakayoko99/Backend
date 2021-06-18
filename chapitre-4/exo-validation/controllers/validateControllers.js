@@ -58,7 +58,11 @@ const oneUserFromName = async (req, res) => {
 
 const oneUserFromId = async (req, res) => {
 
-    const userId = req.params
+    const userId = req.params.id
+
+    const idFinded = await userModel.findById(userId)
+
+    console.log("idFinded :", idFinded);
 
     console.log("userId :", userId);
 

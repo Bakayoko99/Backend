@@ -11,7 +11,7 @@ router.get('/', userCheck)
 
 router.post('/add', validationUsers, addUser);
 
-router.get('/:username', oneUserFromName)
+router.get('/username/:username', oneUserFromName)
 
 router.get('/:id', oneUserFromId)
 
