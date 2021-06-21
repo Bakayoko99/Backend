@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { Hotel, Resto } = require('./models-trippy')
+const { Hotel, Resto } = require('./models/models-trippy')
 
 const app = express()
 
@@ -20,21 +20,21 @@ mongoose.connect("mongodb://localhost:27017/trippy_basics", (err) => {
     }
 })
 
-app.get('/hotels', async (req, res) => {
+// app.get('/hotels', async (req, res) => {
 
-    try {
+//     try {
 
-        const allHotels = await Hotel.find({})
+//         const allHotels = await Hotel.find({})
 
-        res.json(allHotels)
+//         res.json(allHotels)
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
-        console.error(err);
-    }
+//         res.json("error 500")
+//         console.error(err);
+//     }
 
-})
+// })
 
 app.get('/hotels/:id', async (req, res) => {
 
