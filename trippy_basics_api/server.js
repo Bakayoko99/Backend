@@ -2,15 +2,11 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+
 const { Hotel, Resto } = require('./models/models-trippy')
+const debug = require('./middleweares/debug')
 
 const app = express()
-
-app.use(express.json())
-
-app.use(cors())
-
-const port = 8088;
 
 mongoose.connect("mongodb://localhost:27017/trippy_basics", (err) => {
     if (err) {
@@ -19,6 +15,27 @@ mongoose.connect("mongodb://localhost:27017/trippy_basics", (err) => {
         console.log("i'm connected to the database");
     }
 })
+
+const port = 8088;
+
+app.use(express.json())
+
+app.use(cors())
+
+app.use(debug)
+
+app.use('/hotels', (req, res) => {
+    res.json("route server ok")
+})
+
+app.use('/restaurants', (req, res) => {
+    res.json("route server ok")
+})
+
+
+
+
+
 
 // app.get('/hotels', async (req, res) => {
 
@@ -36,273 +53,242 @@ mongoose.connect("mongodb://localhost:27017/trippy_basics", (err) => {
 
 // })
 
-app.get('/hotels/:id', async (req, res) => {
+// app.get('/hotels/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
+//     try {
+//         const id = req.params.id
 
-        const hotelsId = await Hotel.findById(id)
+//         const hotelsId = await Hotel.findById(id)
 
-        // console.log("hotesId :", hotesId);
+//         // console.log("hotesId :", hotesId);
 
-        res.json(hotelsId)
+//         res.json(hotelsId)
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
+//         console.error(err);
 
-    }
+//     }
 
-})
+// })
 
-app.post('/hotels', async (req, res) => {
+// app.post('/hotels', async (req, res) => {
 
-    try {
-        const addHotel = req.body
+//     try {
+//         const addHotel = req.body
 
-        const hotelName = req.body.name
+//         const hotelName = req.body.name
 
-        const findHotel = await Hotel.find({ name: hotelName })
+//         const findHotel = await Hotel.find({ name: hotelName })
 
-        console.log("findHotel post :", findHotel);
+//         console.log("findHotel post :", findHotel);
 
-        if (findHotel[0] == null) {
-            await Hotel.insertMany(addHotel)
-            console.log(findHotel);
-            res.json(`hotel ${hotelName} added`)
-        } else {
-            res.json(`hotel ${hotelName} deja present`)
-        }
+//         if (findHotel[0] == null) {
+//             await Hotel.insertMany(addHotel)
+//             console.log(findHotel);
+//             res.json(`hotel ${hotelName} added`)
+//         } else {
+//             res.json(`hotel ${hotelName} deja present`)
+//         }
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
+//         console.error(err);
 
-    }
+//     }
 
 
-})
+// })
 
-app.put('/hotels/:id', async (req, res) => {
+// app.put('/hotels/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
-        const query = req.query.name
+//     try {
+//         const id = req.params.id
+//         const query = req.query.name
 
-        //    const checkId = {_id: id}
+//         //    const checkId = {_id: id}
 
-        const idFinded = await Hotel.findById(id)
-        //   const idFinded = await Hotel.exists(checkId)
-        if(idFinded == null){
-            res.json('id not correct')
-        }else{
+//         const idFinded = await Hotel.findById(id)
+//         //   const idFinded = await Hotel.exists(checkId)
+//         if(idFinded == null){
+//             res.json('id not correct')
+//         }else{
 
-            await Hotel.updateOne({ _id: id }, { name: query })
-            res.json("Hotel name updated")
-        }
+//             await Hotel.updateOne({ _id: id }, { name: query })
+//             res.json("Hotel name updated")
+//         }
 
 
-        console.log("id app.put :", id);
-        console.log("query app.put :", query);
-        console.log("idFinded app.put :", idFinded);
+//         console.log("id app.put :", id);
+//         console.log("query app.put :", query);
+//         console.log("idFinded app.put :", idFinded);
 
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
+//         console.error(err);
 
-    }
+//     }
 
 
-})
+// })
 
-app.delete('/hotels/:id', async (req, res) => {
+// app.delete('/hotels/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
+//     try {
+//         const id = req.params.id
 
-        const idFinded = await Hotel.findById(id)
+//         const idFinded = await Hotel.findById(id)
 
-        if(idFinded == null){
-            res.json("Hotel not founded")
-        }else{
+//         if(idFinded == null){
+//             res.json("Hotel not founded")
+//         }else{
 
-            await Hotel.deleteOne({ _id: id })
-            res.json("hotel deleted")
-        }
+//             await Hotel.deleteOne({ _id: id })
+//             res.json("hotel deleted")
+//         }
 
 
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
-    }
+//         console.error(err);
+//     }
 
-})
+// })
 
-app.get('/restaurant', async (req, res) => {
+// app.get('/restaurant', async (req, res) => {
 
-    try {
+//     try {
 
-        const allRestos = await Resto.find({})
+//         const allRestos = await Resto.find({})
 
-        res.json(allRestos)
+//         res.json(allRestos)
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
-        console.error(err);
-    }
-})
+//         res.json("error 500")
+//         console.error(err);
+//     }
+// })
 
-app.get('/restaurant/:id', async (req, res) => {
+// app.get('/restaurant/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
+//     try {
+//         const id = req.params.id
 
-        const restoId = await Resto.findById(id)
+//         const restoId = await Resto.findById(id)
 
-        res.json(restoId)
+//         res.json(restoId)
 
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
-        console.error(err);
-    }
-})
+//         res.json("error 500")
+//         console.error(err);
+//     }
+// })
 
-app.post('/restaurant', async (req, res) => {
+// app.post('/restaurant', async (req, res) => {
 
-    try {
-        const addRestos = req.body
+//     try {
+//         const addRestos = req.body
 
-        const restoName = req.body.name
+//         const restoName = req.body.name
 
-        const findResto = await Resto.find({ name: restoName })
+//         const findResto = await Resto.find({ name: restoName })
 
-        console.log("findResto post :", findResto[0]);
-        console.log("addRestos post :", addRestos);
-        console.log("restoName post :", restoName);
-        // res.json(`restaurant ${restoName} added`)
+//         console.log("findResto post :", findResto[0]);
+//         console.log("addRestos post :", addRestos);
+//         console.log("restoName post :", restoName);
+//         // res.json(`restaurant ${restoName} added`)
 
-        if (findResto[0] == null) {
-            await Resto.insertMany(addRestos)
-            console.log(findResto);
-            res.json(`restaurant ${restoName} added`)
-        } else {
-            res.json(`restaurant ${restoName} deja present`)
-        }
+//         if (findResto[0] == null) {
+//             await Resto.insertMany(addRestos)
+//             console.log(findResto);
+//             res.json(`restaurant ${restoName} added`)
+//         } else {
+//             res.json(`restaurant ${restoName} deja present`)
+//         }
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
+//         console.error(err);
 
-    }
+//     }
 
 
-})
+// })
 
-app.put('/restaurant/:id', async (req, res) => {
+// app.put('/restaurant/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
-        const query = req.query.name
+//     try {
+//         const id = req.params.id
+//         const query = req.query.name
 
 
-        const idFinded = await Resto.findById(id)
-        //   const idFinded = await Resto.exists(checkId)
-        if (idFinded == null) {
-            res.json('id not correct')
-        } else {
+//         const idFinded = await Resto.findById(id)
+//         //   const idFinded = await Resto.exists(checkId)
+//         if (idFinded == null) {
+//             res.json('id not correct')
+//         } else {
 
-            await Resto.updateOne({ _id: id }, { name: query })
-        }
+//             await Resto.updateOne({ _id: id }, { name: query })
+//         }
 
-        console.log("id app.put :", id);
-        console.log("query app.put :", query);
-        console.log("idFinded app.put :", idFinded);
+//         console.log("id app.put :", id);
+//         console.log("query app.put :", query);
+//         console.log("idFinded app.put :", idFinded);
 
-        res.json("Restaurant name updated")
+//         res.json("Restaurant name updated")
 
-    } catch (err) {
+//     } catch (err) {
 
-        res.json("error 500")
+//         res.json("error 500")
 
-        console.error(err);
+//         console.error(err);
 
-    }
+//     }
 
 
-})
+// })
 
-app.delete('/restaurant/:id', async (req, res) => {
+// app.delete('/restaurant/:id', async (req, res) => {
 
-    try {
-        const id = req.params.id
+//     try {
+//         const id = req.params.id
 
-        const idFinded = await Resto.findById(id)
+//         const idFinded = await Resto.findById(id)
 
-        console.log("idFinded delete resto :", idFinded);
+//         console.log("idFinded delete resto :", idFinded);
         
-        if(idFinded == null){
-            res.json("Restaurant not founded")
-        }else{
+//         if(idFinded == null){
+//             res.json("Restaurant not founded")
+//         }else{
 
-            await Resto.deleteOne({ _id: id })
-            res.json("Restaurant deleted")
-        }
-
-
-    } catch (err) {
-
-        res.json("error 500")
-
-        console.error(err);
-    }
-
-})
+//             await Resto.deleteOne({ _id: id })
+//             res.json("Restaurant deleted")
+//         }
 
 
+//     } catch (err) {
 
+//         res.json("error 500")
 
+//         console.error(err);
+//     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// })
 
 
 app.listen(port, () => {
