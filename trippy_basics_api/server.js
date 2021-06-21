@@ -4,7 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const { Hotel, Resto } = require('./models/models-trippy')
+const {routersTrippy} = require('./routers/routersTrippy')
 const debug = require('./middleweares/debug')
+
 
 const app = express()
 
@@ -24,12 +26,12 @@ app.use(cors())
 
 app.use(debug)
 
-app.use('/hotels', (req, res) => {
-    res.json("route server ok")
+app.use('/hotels', routersTrippy, (req, res) => {
+    res.json("route server hotel ok")
 })
 
-app.use('/restaurants', (req, res) => {
-    res.json("route server ok")
+app.use('/restaurants', routersTrippy, (req, res) => {
+    res.json("route server resto ok")
 })
 
 

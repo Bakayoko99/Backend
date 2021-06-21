@@ -104,7 +104,7 @@ const deleteHotels = async (req, res) => {
         const idFinded = await Hotel.findById(id)
 
         if (idFinded == null) {
-            res.json("Hotel not founded")
+            res.json("Hotel not found")
         } else {
 
             await Hotel.deleteOne({ _id: id })

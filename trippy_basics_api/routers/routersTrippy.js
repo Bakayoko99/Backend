@@ -10,24 +10,28 @@ const { findAllHotels, findHotelsById, addHotels,
 
 // Hotels
 
-router.get('/hotels', findAllHotels)
+router.get('/', findAllHotels)
 
-router.get('/hotels/:id', findHotelsById)
+router.get('/:id', findHotelsById)
 
-router.post('/hotels', addHotels)
+router.post('/', addHotels)
 
-router.put('/hotels/:id', updateHotelName)
+router.put('/:id', updateHotelName)
 
-router.delete('/hotels/:id', deleteHotels)
+router.delete('/:id', deleteHotels)
 
 // Restaurants
 
-router.get('/restaurant', findAllRestos)
+router.get('/', findAllRestos)
 
-router.get('/restaurant/:id', findRestoById)
+router.get('/:id', findRestoById)
 
-router.post('/restaurant', addRestos)
+router.post('/', addRestos)
 
-router.put('/restaurant/:id', updateRestoName)
+router.put('/:id', updateRestoName)
 
-router.delete('/restaurant/:id', deleteResto)
+router.delete('/:id', deleteResto)
+
+module.exports = {
+    routersTrippy : router
+}
