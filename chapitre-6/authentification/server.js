@@ -6,9 +6,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 mongoose.connect('mongodb://localhost:27017/authentification', { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-    if(err){
+    if (err) {
         console.log(err);
-    }else{
+    } else {
         console.log("I'm connected to the database");
     }
 })
@@ -28,16 +28,66 @@ const authModel = mongoose.model('Auth', authSchema)
 
 app.post('/signup', async (req, res) => {
 
-    const userName = req.body.username
-    const passWord = req.body.password
+    try {
 
-    const pswCrypt = bcrypt.hashSync(passWord)
+        const userName = req.body.username
+        const passWord = req.body.password
 
-    const addUser = await authModel.create({username: userName, password: pswCrypt})
+        const pswCrypt = bcrypt.hashSync(passWord)
 
-    console.log("psw :", pswCrypt);
+        await authModel.create({ username: userName, password: pswCrypt })
 
-    res.json(`OK TEST ${userName}, ${passWord}`)
+        console.log("psw :", pswCrypt);
+
+        res.json(`OK TEST ${userName}, ${passWord}`)
+    }
+
+    catch (error) {
+
+        res.status(401).json("not found")
+
+    }
+})
+
+app.post('/login', async (req, res) => {
+
+    try {
+
+        const userName = req.body.username
+        const password = req.body.password
+
+        const findUsername = await authModel.findOne({ username: userName })
+
+        console.log("findUsername :", findUsername);
+
+        const comparedPsw = await bcrypt.compare(password, findUsername.password)
+
+        if (findUsername === null) {
+
+            res.json('username not founded')
+
+        } else {
+            
+            if(comparedPsw === true){
+
+                // jwt.sign()
+
+                res.json(`Welcome ${userName}`)
+
+            }else{
+                res.json(`${userName} incorrect password`)
+            }
+
+            res.json(`OK`)
+        }
+
+
+        res.json("TEST LOGIN")
+
+    } catch (error) {
+
+        res.status(401).json("Error")
+    }
 })
 
 
