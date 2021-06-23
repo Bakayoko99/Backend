@@ -49,6 +49,7 @@ app.post('/signup', async (req, res) => {
     }
 })
 
+
 app.post('/login', async (req, res) => {
 
     try {
@@ -56,7 +57,7 @@ app.post('/login', async (req, res) => {
         const userName = req.body.username
         const password = req.body.password
 
-        const findUsername = await authModel.findOne({ username: userName })
+        const findUsername = await authModel.findOne({ username: userName }).lean()
 
         console.log("findUsername :", findUsername);
 
@@ -70,9 +71,13 @@ app.post('/login', async (req, res) => {
             
             if(comparedPsw === true){
 
-                // jwt.sign()
+                const assignToken = await jwt.sign({id: findUsername._id}, "monCodeSecret",{expiresIn: 60 * 60})
 
-                res.json(`Welcome ${userName}`)
+                console.log("assignToken :", assignToken);
+
+                // console.log(config.secret);
+
+                res.json(`Welcome ${userName} your private key ${assignToken}`)
 
             }else{
                 res.json(`${userName} incorrect password`)
@@ -81,13 +86,33 @@ app.post('/login', async (req, res) => {
             res.json(`OK`)
         }
 
-
         res.json("TEST LOGIN")
 
     } catch (error) {
 
-        res.status(401).json("Error")
+        res.status(401).json({message:"Error", error})
     }
+})
+
+const verifyToken = async (req, res, next) => {
+
+    try {
+        
+        const verifyToken = req.headers.Athorization
+
+        console.log( "verifyToken :",verifyToken);
+
+    } catch (error) {
+
+        res.status(500).json({message: error})
+        
+    }
+}
+
+app.get('/private', verifyToken, async (req, res) => {
+
+    res.json("your private route")
+
 })
 
 
